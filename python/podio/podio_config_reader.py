@@ -54,7 +54,7 @@ class MemberParser:
     take the match and return a MemberVariable from it"""
     for rgx, callback in regexps_callbacks:
       match = rgx.match(string)
-      if match is not None:
+      if match:
         return callback(match)
 
     raise DefinitionError(f"'{string}' is not a valid member definition")

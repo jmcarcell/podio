@@ -1,7 +1,6 @@
 #ifndef PODIO_UTILITIES_TYPEHELPERS_H
 #define PODIO_UTILITIES_TYPEHELPERS_H
 
-#include <string>
 #include <tuple>
 #include <type_traits>
 #include <vector>

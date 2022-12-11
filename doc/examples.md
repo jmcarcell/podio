@@ -163,7 +163,7 @@ colMD.setValue("CellIDEncodingString","system:8,barrel:3,layer:6,slice:5,x:-16,y
 
 ```cpp
 auto colMD = store.getCollectionMetaData( hits.getID() );
-std::string es = colMD.getStringVal("CellIDEncodingString") ;
+std::string es = colMD.getValue<std::string>("CellIDEncodingString") ;
 ```
 
 
