@@ -19,7 +19,7 @@ jobs:
     - name: Fetch packages
       run: |
         docker exec CI_container /bin/bash -c 'cd Package;\
-        git clone https://github.com/key4hep/EDM4hep --depth 1\
+        git clone https://github.com/key4hep/EDM4hep --depth 1;\
         ls -lah'
     - name: CMake Configure
       run: |
