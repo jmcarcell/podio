@@ -29,7 +29,6 @@ jobs:
     - name: Fetch dependents
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
-        cd ..;\
         git clone https://github.com/spack/spack --depth 1;\
         source spack/share/spack/setup-env.sh;\
         # Lower caps name
