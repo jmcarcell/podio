@@ -13,6 +13,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: cvmfs-contrib/github-action-cvmfs@v3
+  test2:
+    runs-on: ubuntu-latest
     # - uses: docker://ghcr.io/aidasoft/centos7:latest 
     #   with:
     #     entrypoint: -v  -v ${GITHUB_WORKSPACE}:/Package/main /bin/bash
