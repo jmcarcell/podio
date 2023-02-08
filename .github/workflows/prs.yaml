@@ -15,9 +15,7 @@ jobs:
     - uses: cvmfs-contrib/github-action-cvmfs@v3
     - uses: docker://ghcr.io/aidasoft/centos7:latest
       with:
-        volumes:
-          - /cvmfs:/cvmfs
-          - ${GITHUB_WORKSPACE}:/Package/main 
+        volumes: /cvmfs:/cvmfs ${GITHUB_WORKSPACE}:/Package/main 
     - name: CMake Configure
       run: |
          cd Package/main
