@@ -20,6 +20,7 @@ jobs:
       volumes:
         - /cvmfs:/cvmfs
         - ${GITHUB_WORKSPACE}:/Package/main 
+    steps:
     - name: CMake Configure
       run: |
          cd Package/main
