@@ -13,8 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: cvmfs-contrib/github-action-cvmfs@v3
-  test2:
-    runs-on: ubuntu-latest
     container:
       image: ghcr.io/aidasoft/centos7:latest
       volumes:
