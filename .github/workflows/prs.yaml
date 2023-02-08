@@ -13,7 +13,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: cvmfs-contrib/github-action-cvmfs@v3
-    - uses: docker://ghcr.io/aidasoft/centos7:latest -v /cvmfs:/cvmfs -v ${GITHUB_WORKSPACE}:/Package/main
+    - uses: docker://ghcr.io/aidasoft/centos7:latest 
+      with:
+        args: -v /cvmfs:/cvmfs -v ${GITHUB_WORKSPACE}:/Package/main
     - name: CMake Configure
       run: |
          cd Package/main
