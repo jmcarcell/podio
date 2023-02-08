@@ -1,6 +1,6 @@
 name: linux
 
-on: [push, pull_request]
+on: pull_request
 
 jobs:
   test:
@@ -21,7 +21,7 @@ jobs:
       run: |
          docker exec CI_container /bin/bash -c 'cd ./Package/main;\
          echo "BODY: " ;\
-         echo ${{ github.event.inputs.body }};\
+         echo ${{ github.event.pull_request.body }};\
          mkdir -p build install;\
          source /cvmfs/${{ matrix.cvmfs_base }}/${{ matrix.ENVIRONMENT }}/setup.sh;\
          cd build;\
