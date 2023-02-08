@@ -21,7 +21,7 @@ jobs:
       run: |
          docker exec CI_container /bin/bash -c 'cd ./Package/main;\
          echo "BODY: " ;\
-         echo ${{ github.events.inputs.body }};\
+         echo ${{ github.event.inputs.body }};\
          mkdir -p build install;\
          source /cvmfs/${{ matrix.cvmfs_base }}/${{ matrix.ENVIRONMENT }}/setup.sh;\
          cd build;\
