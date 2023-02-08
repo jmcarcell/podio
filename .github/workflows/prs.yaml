@@ -13,30 +13,31 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: cvmfs-contrib/github-action-cvmfs@v3
-    - uses: docker://ghcr.io/aidasoft/centos7:latest
-      with:
-        volumes: /cvmfs:/cvmfs ${GITHUB_WORKSPACE}:/Package/main 
+
+    - name: Start container
+      run: |
+        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d  ghcr.io/aidasoft/centos7:latest /bin/bash
     - name: CMake Configure
       run: |
-         cd Package/main
-         mkdir -p build install
-         source /cvmfs/${{ matrix.cvmfs_base }}/${{ matrix.ENVIRONMENT }}/setup.sh
-         cd build
-         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -G Ninja ..
+         docker exec CI_container /bin/bash -c 'cd ./Package/main;\
+         cd Package/main;\
+         mkdir -p build install;\
+         source /cvmfs/${{ matrix.cvmfs_base }}/${{ matrix.ENVIRONMENT }}/setup.sh;\
+         cd build;\
+         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -G Ninja ..;\
+         '
          # ninja -k0 install'
     - name: Fetch dependents
       run: |
-        cd ..
-        git clone https://github.com/spack/spack --depth 1
-        source spack/share/spack/setup-env.sh
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        cd ..;\
+        git clone https://github.com/spack/spack --depth 1;\
+        source spack/share/spack/setup-env.sh;\
         # Lower caps name
-        name=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
-        deps=$(spack dependents $name)
-        for d in deps
-        do
-          echo $d
-        done
-        ls -lah
+        name=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]');\
+        ./main/.github/scripts/fetch.sh $1;\
+        ls -lah;\
+        '
     # - name: Test
     #   run: |
     #     docker exec CI_container /bin/bash -c 'cd ./Package;\
