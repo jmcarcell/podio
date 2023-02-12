@@ -31,16 +31,34 @@ jobs:
     - name: Fetch dependents
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
+        # Lower caps name
+        name=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]');\
+        pip3 install --user requests
+        ./main/.github/scripts/fetch.sh $1;\
+        ls -lah;\
+
+        name=podio
+        yum install -y glibc-devel git
+        cd Package
+        source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh;\
         git clone https://github.com/spack/spack --depth 1;\
         source spack/share/spack/setup-env.sh;\
         git clone https://github.com/key4hep/key4hep-spack --depth 1;\
         cd key4hep-spack;\
         spack repo add .;\
         cd ..;\
-        # Lower caps name
-        name=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]');\
-        ./main/.github/scripts/fetch.sh $1;\
-        ls -lah;\
+        python3 /Package/main/.github/workflows/externals.py
+        branch_packages=$(python3 /Package/main/.github/workflows/parse.py ${{ github.event.pull_request.body }})
+        branch_packages=""
+        spack env create dev
+        spack env activate dev
+        python3 /Package/main/.github/workflows/config.py
+        python3 /Package/main/.github/workflows/fetch_and_checkout.py $name $branch_packages
+        cd main
+        spack develop --no-clone --path $PWD $name@master
+        spack add $name@master
+        spack concretize -f
+
         '
     # - name: Test
     #   run: |
