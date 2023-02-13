@@ -1,6 +1,6 @@
 name: linux
 
-on: [push, pull_request]
+on: pull_request
 
 jobs:
   test:
@@ -16,10 +16,12 @@ jobs:
 
     - name: Start container
       run: |
-        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package/main -v /cvmfs:/cvmfs:shared -d  ghcr.io/aidasoft/centos7:latest /bin/bash
+        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package/main -v /cvmfs:/cvmfs:shared -d  centos:7 /bin/bash
     - name: CMake Configure
       run: |
          docker exec CI_container /bin/bash -c 'cd ./Package/main;\
+         echo "BODY: " ;\
+         echo ${{ github.event.pull_request.body }};\
          mkdir -p build install;\
          source /cvmfs/${{ matrix.cvmfs_base }}/${{ matrix.ENVIRONMENT }}/setup.sh;\
          cd build;\
@@ -29,12 +31,34 @@ jobs:
     - name: Fetch dependents
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
-        git clone https://github.com/spack/spack --depth 1;\
-        source spack/share/spack/setup-env.sh;\
         # Lower caps name
         name=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]');\
+        pip3 install --user requests
         ./main/.github/scripts/fetch.sh $1;\
         ls -lah;\
+
+        name=podio
+        yum install -y glibc-devel git
+        cd Package
+        source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh;\
+        git clone https://github.com/spack/spack --depth 1;\
+        source spack/share/spack/setup-env.sh;\
+        git clone https://github.com/key4hep/key4hep-spack --depth 1;\
+        cd key4hep-spack;\
+        spack repo add .;\
+        cd ..;\
+        python3 /Package/main/.github/workflows/externals.py
+        branch_packages=$(python3 /Package/main/.github/workflows/parse.py ${{ github.event.pull_request.body }})
+        branch_packages=""
+        spack env create dev
+        spack env activate dev
+        python3 /Package/main/.github/workflows/config.py
+        python3 /Package/main/.github/workflows/fetch_and_checkout.py $name $branch_packages
+        cd main
+        spack develop --no-clone --path $PWD $name@master
+        spack add $name@master
+        spack concretize -f
+
         '
     # - name: Test
     #   run: |
