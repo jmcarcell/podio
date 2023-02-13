@@ -16,7 +16,7 @@ jobs:
 
     - name: Start container
       run: |
-        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package/main -v /cvmfs:/cvmfs:shared -d  ghcr.io/aidasoft/centos7:latest /bin/bash
+        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package/main -v /cvmfs:/cvmfs:shared -d  centos:7 /bin/bash
     - name: CMake Configure
       run: |
          docker exec CI_container /bin/bash -c 'cd ./Package/main;\
