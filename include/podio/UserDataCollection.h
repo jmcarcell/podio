@@ -104,7 +104,8 @@ public:
   /// Get the collection buffers for this collection
   podio::CollectionWriteBuffers getBuffers() override {
     _vecPtr = &_vec; // Set the pointer to the correct internal vector
-    return {&_vecPtr, &m_refCollections, &m_vecmem_info};
+    auto ptr = _vec.data();
+    return {_vecPtr, ptr, &m_refCollections, &m_vecmem_info};
   }
 
   podio::CollectionReadBuffers createBuffers() /*const*/ final {

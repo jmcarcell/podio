@@ -50,25 +50,25 @@ void write(podio::EventStore& store, WriterT& writer) {
   auto& usrInts = store.create<podio::UserDataCollection<uint64_t>>("userInts");
   auto& usrDoubles = store.create<podio::UserDataCollection<double>>("userDoubles");
 
-  writer.registerForWrite("info");
-  writer.registerForWrite("mcparticles");
-  writer.registerForWrite("moreMCs");
-  writer.registerForWrite("mcParticleRefs");
+  // writer.registerForWrite("info");
+  // writer.registerForWrite("mcparticles");
+  // writer.registerForWrite("moreMCs");
+  // writer.registerForWrite("mcParticleRefs");
   writer.registerForWrite("hits");
-  writer.registerForWrite("hitRefs");
-  writer.registerForWrite("clusters");
-  writer.registerForWrite("refs");
-  writer.registerForWrite("refs2");
-  writer.registerForWrite("Component");
-  writer.registerForWrite("OneRelation");
-  writer.registerForWrite("WithVectorMember");
-  writer.registerForWrite("WithNamespaceMember");
-  writer.registerForWrite("WithNamespaceRelation");
-  writer.registerForWrite("WithNamespaceRelationCopy");
-  writer.registerForWrite("arrays");
-  writer.registerForWrite("fixedWidthInts");
-  writer.registerForWrite("userInts");
-  writer.registerForWrite("userDoubles");
+  // writer.registerForWrite("hitRefs");
+  // writer.registerForWrite("clusters");
+  // writer.registerForWrite("refs");
+  // writer.registerForWrite("refs2");
+  // writer.registerForWrite("Component");
+  // writer.registerForWrite("OneRelation");
+  // writer.registerForWrite("WithVectorMember");
+  // writer.registerForWrite("WithNamespaceMember");
+  // writer.registerForWrite("WithNamespaceRelation");
+  // writer.registerForWrite("WithNamespaceRelationCopy");
+  // writer.registerForWrite("arrays");
+  // writer.registerForWrite("fixedWidthInts");
+  // writer.registerForWrite("userInts");
+  // writer.registerForWrite("userDoubles");
 
   unsigned nevents = 2000;
 

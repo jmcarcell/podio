@@ -25,6 +25,7 @@ using VectorMembersInfo = std::vector<std::pair<std::string, void*>>;
  */
 struct CollectionWriteBuffers {
   void* data{nullptr};
+  void* dataArrayPtr{nullptr};
   CollRefCollection* references{nullptr};
   VectorMembersInfo* vectorMembers{nullptr};
 
@@ -36,7 +37,7 @@ struct CollectionWriteBuffers {
   template <typename T>
   static std::vector<T>* asVector(void* raw) {
     // Are we at a beach? I can almost smell the C...
-    return *static_cast<std::vector<T>**>(raw);
+    return static_cast<std::vector<T>*>(raw);
   }
 };
 

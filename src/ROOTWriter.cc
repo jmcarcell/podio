@@ -6,6 +6,9 @@
 #include "podio/ROOTWriter.h"
 #include "podio/podioVersion.h"
 
+#include "datamodel/ExampleHitData.h"
+// #include "TestDataModelDict.cxx"
+
 // ROOT specifc includes
 #include "TFile.h"
 #include "TTree.h"
@@ -38,6 +41,7 @@ void ROOTWriter::writeEvent() {
     collections.back().second->prepareForWrite();
   }
 
+  m_test_tree = new TTree("events", "Events tree");
   if (m_firstEvent) {
     createBranches(collections);
     m_firstEvent = false;
@@ -45,11 +49,21 @@ void ROOTWriter::writeEvent() {
     setBranches(collections);
   }
 
+
+  std::cout << "Going to fill" << std::endl;
+  std::cout << m_ptr << std::endl;
+  auto vptr = static_cast<std::vector<ExampleHitData>*>(m_ptr);
+  std::cout << "Size is " << vptr->size() << std::endl;
+  std::cout << (*vptr)[0].cellID << " " << (*vptr)[0].x << " " << (*vptr)[0].y << " " << (*vptr)[0].z << " " << (*vptr)[0].energy << std::endl;
+  std::cout << (*vptr)[1].cellID << " " << (*vptr)[1].x << " " << (*vptr)[1].y << " " << (*vptr)[0].z << " " << (*vptr)[1].energy << std::endl;
+  m_test_tree->Fill();
+  std::cout << "Test tree filled" << std::endl;
   m_datatree->Fill();
   m_evtMDtree->Fill();
 }
 
 void ROOTWriter::createBranches(const std::vector<StoreCollection>& collections) {
+  auto ptr = nullptr;
   for (auto& [name, coll] : collections) {
     root_utils::CollectionBranches branches;
     const auto collBuffers = coll->getBuffers();
@@ -58,7 +72,15 @@ void ROOTWriter::createBranches(const std::vector<StoreCollection>& collections)
 
       auto collClassName = "vector<" + coll->getDataTypeName() + ">";
 
+      if (name == "hits") {
+        auto vptr = static_cast<std::vector<ExampleHitData>*>(collBuffers.data);
+        m_ptr = vptr;
+        std::cout << "Size is " << vptr->size() << std::endl;
+        std::cout << (*vptr)[0].cellID << " " << (*vptr)[0].x << " " << (*vptr)[0].y << " " << (*vptr)[0].z << " " << (*vptr)[0].energy << std::endl;
+      }
+
       branches.data = m_datatree->Branch(name.c_str(), collClassName.c_str(), collBuffers.data);
+      m_test_tree->Branch(name.c_str(), collClassName.c_str(), collBuffers.data);
     }
 
     // reference collections

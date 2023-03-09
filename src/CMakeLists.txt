@@ -83,6 +83,7 @@ SET(root_headers
 
 PODIO_ADD_LIB_AND_DICT(podioRootIO "${root_headers}" "${root_sources}" root_selection.xml)
 target_link_libraries(podioRootIO PUBLIC podio::podio ROOT::Core ROOT::RIO ROOT::Tree)
+target_include_directories(podioRootIO PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/tests> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/build/tests>)
 
 
 # --- Python EventStore for enabling (legacy) python bindings

@@ -31,7 +31,7 @@
 {# we have to declare them here, otherwise they cannot be easily imported #}
 {{ class_selection(class) }}
 {{ class_selection(class, postfix='Collection') }}
-{{ vector_class_selection(class) }}
+{{ vector_class_selection(class, postfix='Data') }}
 
 {% endfor %}
     </selection>

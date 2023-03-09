@@ -66,6 +66,9 @@ set(root_libs TestDataModelDict ExtensionDataModelDict podio::podioRootIO)
 foreach( sourcefile ${root_dependent_tests} )
   CREATE_PODIO_TEST(${sourcefile} "${root_libs}")
 endforeach()
+# target_link_libraries(write TestDataModel TestDataModelDict)
+# target_link_directories(write PUBLIC "~/Key4hep/Test")
+# target_link_libraries(write ExampleHitData)
 
 # Avoid fetching these everytime cmake is run by caching the directory the first
 # time the inputs are fetched or if the expected file does not exist in the

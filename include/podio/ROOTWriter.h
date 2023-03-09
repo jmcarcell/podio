@@ -38,6 +38,7 @@ private:
   void createBranches(const std::vector<StoreCollection>& collections);
   void setBranches(const std::vector<StoreCollection>& collections);
 
+  void* m_ptr {nullptr};
   // members
   std::string m_filename;
   EventStore* m_store;
@@ -47,6 +48,7 @@ private:
   TTree* m_runMDtree;
   TTree* m_evtMDtree;
   TTree* m_colMDtree;
+  TTree* m_test_tree;
   std::vector<std::string> m_collectionsToWrite{};
   // In order to avoid having to look up the branches from the datatree for
   // every event, we cache them in this vector, that is populated the first
