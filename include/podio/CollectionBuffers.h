@@ -36,7 +36,7 @@ struct CollectionWriteBuffers {
   template <typename T>
   static std::vector<T>* asVector(void* raw) {
     // Are we at a beach? I can almost smell the C...
-    return *static_cast<std::vector<T>**>(raw);
+    return static_cast<std::vector<T>*>(raw);
   }
 };
 

@@ -45,42 +45,46 @@ void ROOTWriter::writeEvent() {
     setBranches(collections);
   }
 
+  std::cout << "Calling Fill() " << std::endl;
   m_datatree->Fill();
+  std::cout << "Fill called" << std::endl;
   m_evtMDtree->Fill();
 }
 
 void ROOTWriter::createBranches(const std::vector<StoreCollection>& collections) {
   for (auto& [name, coll] : collections) {
     root_utils::CollectionBranches branches;
-    const auto collBuffers = coll->getBuffers();
+    auto collBuffers = coll->getBuffers();
     if (collBuffers.data) {
       // only create the data buffer branch if necessary
 
       auto collClassName = "vector<" + coll->getDataTypeName() + ">";
 
-      branches.data = m_datatree->Branch(name.c_str(), collClassName.c_str(), collBuffers.data);
+      // std::cout << name << " " << collBuffers.data << " " << (void*)&collBuffers.data << std::endl;
+      // m_book.push_back(collBuffers.data);
+      branches.data = m_datatree->Branch(name.c_str(), collClassName.c_str(), (void*)&collBuffers.data);
     }
 
     // reference collections
-    if (auto refColls = collBuffers.references) {
-      int i = 0;
-      for (auto& c : (*refColls)) {
-        const auto brName = root_utils::refBranch(name, i);
-        branches.refs.push_back(m_datatree->Branch(brName.c_str(), c.get()));
-        ++i;
-      }
-    }
+    // if (auto refColls = collBuffers.references) {
+    //   int i = 0;
+    //   for (auto& c : (*refColls)) {
+    //     const auto brName = root_utils::refBranch(name, i);
+    //     branches.refs.push_back(m_datatree->Branch(brName.c_str(), c.get()));
+    //     ++i;
+    //   }
+    // }
 
     // vector members
-    if (auto vminfo = collBuffers.vectorMembers) {
-      int i = 0;
-      for (auto& [type, vec] : (*vminfo)) {
-        const auto typeName = "vector<" + type + ">";
-        const auto brName = root_utils::vecBranch(name, i);
-        branches.vecs.push_back(m_datatree->Branch(brName.c_str(), typeName.c_str(), vec));
-        ++i;
-      }
-    }
+    // if (auto vminfo = collBuffers.vectorMembers) {
+    //   int i = 0;
+    //   for (auto& [type, vec] : (*vminfo)) {
+    //     const auto typeName = "vector<" + type + ">";
+    //     const auto brName = root_utils::vecBranch(name, i);
+    //     branches.vecs.push_back(m_datatree->Branch(brName.c_str(), typeName.c_str(), vec));
+    //     ++i;
+    //   }
+    // }
 
     m_collectionBranches.push_back(branches);
   }
@@ -89,9 +93,23 @@ void ROOTWriter::createBranches(const std::vector<StoreCollection>& collections)
 void ROOTWriter::setBranches(const std::vector<StoreCollection>& collections) {
   size_t iCollection = 0;
   for (auto& coll : collections) {
-    const auto& branches = m_collectionBranches[iCollection];
-    root_utils::setCollectionAddresses(coll.second->getBuffers(), branches);
-
+    for (auto& coll2 : collections) {
+      std::cout << "Printing addresses" << std::endl;
+      std::cout << coll2.second->getBuffers().data << std::endl;
+    }
+    std::cout << coll.first << std::endl;
+    auto branches = m_collectionBranches[iCollection];
+    std::cout << "Calling root_utils::setCollectionAddresses " << std::endl;
+    // root_utils::setCollectionAddresses(coll.second->getBuffers(), branches);
+    auto collBuffers = coll.second->getBuffers();
+    std::cout << "collBuffer.data " << collBuffers.data << std::endl;
+    if (collBuffers.data) {
+      void* tmp = &collBuffers.data;
+      m_book.push_back(tmp);
+      // branches.data->ResetAddress();
+      // branches.data->SetAddress(tmp);
+      std::cout << "Pointer to pointer: " << tmp << std::endl;
+    }
     iCollection++;
   }
 }
@@ -99,33 +117,33 @@ void ROOTWriter::setBranches(const std::vector<StoreCollection>& collections) {
 void ROOTWriter::finish() {
   // now we want to safe the metadata. This includes info about the
   // collections
-  const auto collIDTable = m_store->getCollectionIDTable();
-  m_metadatatree->Branch("CollectionIDs", collIDTable);
+  // const auto collIDTable = m_store->getCollectionIDTable();
+  // m_metadatatree->Branch("CollectionIDs", collIDTable);
 
-  // collectionID, collection type, subset collection
-  std::vector<root_utils::CollectionInfoT> collectionInfo;
-  collectionInfo.reserve(m_collectionsToWrite.size());
-  for (const auto& name : m_collectionsToWrite) {
-    const auto collID = collIDTable->collectionID(name);
-    const podio::CollectionBase* coll{nullptr};
-    // No check necessary, only registered collections possible
-    m_store->get(name, coll);
-    const auto collType = coll->getTypeName();
-    // const auto collType = "std::vector<" + coll->getDataTypeName() + ">";
-    collectionInfo.emplace_back(collID, std::move(collType), coll->isSubsetCollection());
-  }
+  // // collectionID, collection type, subset collection
+  // std::vector<root_utils::CollectionInfoT> collectionInfo;
+  // collectionInfo.reserve(m_collectionsToWrite.size());
+  // for (const auto& name : m_collectionsToWrite) {
+  //   const auto collID = collIDTable->collectionID(name);
+  //   const podio::CollectionBase* coll{nullptr};
+  //   // No check necessary, only registered collections possible
+  //   m_store->get(name, coll);
+  //   const auto collType = coll->getTypeName();
+  //   // const auto collType = "std::vector<" + coll->getDataTypeName() + ">";
+  //   collectionInfo.emplace_back(collID, std::move(collType), coll->isSubsetCollection());
+  // }
 
-  m_metadatatree->Branch("CollectionTypeInfo", &collectionInfo);
+  // m_metadatatree->Branch("CollectionTypeInfo", &collectionInfo);
 
-  podio::version::Version podioVersion = podio::version::build_version;
-  m_metadatatree->Branch("PodioVersion", &podioVersion);
+  // podio::version::Version podioVersion = podio::version::build_version;
+  // m_metadatatree->Branch("PodioVersion", &podioVersion);
 
-  m_metadatatree->Fill();
+  // m_metadatatree->Fill();
 
-  m_colMDtree->Branch("colMD", "std::map<int,podio::GenericParameters>", m_store->getColMetaDataMap());
-  m_colMDtree->Fill();
-  m_runMDtree->Branch("runMD", "std::map<int,podio::GenericParameters>", m_store->getRunMetaDataMap());
-  m_runMDtree->Fill();
+  // m_colMDtree->Branch("colMD", "std::map<int,podio::GenericParameters>", m_store->getColMetaDataMap());
+  // m_colMDtree->Fill();
+  // m_runMDtree->Branch("runMD", "std::map<int,podio::GenericParameters>", m_store->getRunMetaDataMap());
+  // m_runMDtree->Fill();
 
   m_file->Write();
   m_file->Close();

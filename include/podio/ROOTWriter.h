@@ -54,6 +54,7 @@ private:
   // change between events, the assocation between the collections to write
   // and their branches is simply index based
   std::vector<root_utils::CollectionBranches> m_collectionBranches{};
+  std::vector<void*> m_book;
 
   bool m_firstEvent{true};
 };

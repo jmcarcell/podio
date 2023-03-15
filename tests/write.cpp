@@ -8,7 +8,7 @@ int main(int, char**) {
   write(store, writer);
 
   // start from a clean slate for the second file
-  auto store2 = podio::EventStore();
-  auto writer2 = podio::ROOTWriter("example1.root", &store2);
-  write(store2, writer2);
+  // auto store2 = podio::EventStore();
+  // auto writer2 = podio::ROOTWriter("example1.root", &store2);
+  // write(store2, writer2);
 }

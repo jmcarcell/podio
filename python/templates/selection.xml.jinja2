@@ -6,6 +6,14 @@
 {%- endif %}
 {% endmacro %}
 
+{% macro vector_class_selection(class, prefix='', postfix='') %}
+{%- if class.namespace %}
+        <class name="std::vector<{{ class.namespace }}::{{ prefix }}{{ class.bare_type }}{{ postfix }}>"/>
+{%- else %}
+        <class name="std::vector<{{ prefix }}{{ class.bare_type }}{{ postfix }}>"/>
+{%- endif %}
+{% endmacro %}
+
 <lcgdict>
     <selection>
 
@@ -23,6 +31,7 @@
 {# we have to declare them here, otherwise they cannot be easily imported #}
 {{ class_selection(class) }}
 {{ class_selection(class, postfix='Collection') }}
+{{ vector_class_selection(class, postfix='Data') }}
 
 {% endfor %}
     </selection>

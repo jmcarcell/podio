@@ -55,24 +55,25 @@ void write(podio::EventStore& store, WriterT& writer) {
   writer.registerForWrite("moreMCs");
   writer.registerForWrite("mcParticleRefs");
   writer.registerForWrite("hits");
-  writer.registerForWrite("hitRefs");
-  writer.registerForWrite("clusters");
-  writer.registerForWrite("refs");
-  writer.registerForWrite("refs2");
-  writer.registerForWrite("Component");
-  writer.registerForWrite("OneRelation");
-  writer.registerForWrite("WithVectorMember");
-  writer.registerForWrite("WithNamespaceMember");
-  writer.registerForWrite("WithNamespaceRelation");
-  writer.registerForWrite("WithNamespaceRelationCopy");
-  writer.registerForWrite("arrays");
-  writer.registerForWrite("fixedWidthInts");
-  writer.registerForWrite("userInts");
-  writer.registerForWrite("userDoubles");
+  // writer.registerForWrite("hitRefs");
+  // writer.registerForWrite("clusters");
+  // writer.registerForWrite("refs");
+  // writer.registerForWrite("refs2");
+  // writer.registerForWrite("Component");
+  // writer.registerForWrite("OneRelation");
+  // writer.registerForWrite("WithVectorMember");
+  // writer.registerForWrite("WithNamespaceMember");
+  // writer.registerForWrite("WithNamespaceRelation");
+  // writer.registerForWrite("WithNamespaceRelationCopy");
+  // writer.registerForWrite("arrays");
+  // writer.registerForWrite("fixedWidthInts");
+  // writer.registerForWrite("userInts");
+  // writer.registerForWrite("userDoubles");
 
   unsigned nevents = 2000;
 
   for (unsigned i = 0; i < nevents; ++i) {
+    std::cout << "EVENT " << i << std::endl;
     if (i % 1000 == 0) {
       std::cout << "processing event " << i << std::endl;
     }
