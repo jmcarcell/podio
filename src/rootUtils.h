@@ -84,20 +84,21 @@ template <typename BufferT>
 inline void setCollectionAddresses(const BufferT& collBuffers, const CollectionBranches& branches) {
 
   if (auto buffer = collBuffers.data) {
-    branches.data->SetAddress(buffer);
+    std::cout << "Setting address" << std::endl;
+    branches.data->SetAddress((void*)&buffer);
   }
 
-  if (auto refCollections = collBuffers.references) {
-    for (size_t i = 0; i < refCollections->size(); ++i) {
-      branches.refs[i]->SetAddress(&(*refCollections)[i]);
-    }
-  }
+  // if (auto refCollections = collBuffers.references) {
+  //   for (size_t i = 0; i < refCollections->size(); ++i) {
+  //     branches.refs[i]->SetAddress(&(*refCollections)[i]);
+  //   }
+  // }
 
-  if (auto vecMembers = collBuffers.vectorMembers) {
-    for (size_t i = 0; i < vecMembers->size(); ++i) {
-      branches.vecs[i]->SetAddress((*vecMembers)[i].second);
-    }
-  }
+  // if (auto vecMembers = collBuffers.vectorMembers) {
+  //   for (size_t i = 0; i < vecMembers->size(); ++i) {
+  //     branches.vecs[i]->SetAddress((*vecMembers)[i].second);
+  //   }
+  // }
 }
 
 // A collection of additional information that describes the collection: the
