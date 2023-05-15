@@ -208,15 +208,10 @@ podio::CollectionReadBuffers createBuffers(bool isSubset) {
   return readBuffers;
 }
 
-// The usual trick with an IIFE and a static variable inside a funtion and then
-// making sure to call that function during shared library loading
 bool registerCollection() {
-  const static auto reg = []() {
-    auto& factory = podio::CollectionBufferFactory::mutInstance();
-    factory.registerCreationFunc("{{ class.full_type }}Collection", {{ package_name }}::meta::schemaVersion, createBuffers);
-    return true;
-  }();
-  return reg;
+  auto& factory = podio::CollectionBufferFactory::mutInstance();
+  factory.registerCreationFunc("{{ class.full_type }}Collection", {{ package_name }}::meta::schemaVersion, createBuffers);
+  return true;
 }
 
 const auto registeredCollection = registerCollection();

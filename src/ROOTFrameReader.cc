@@ -73,7 +73,10 @@ podio::CollectionReadBuffers ROOTFrameReader::getCollectionBuffers(ROOTFrameRead
   const auto& bufferFactory = podio::CollectionBufferFactory::instance();
   auto maybeBuffers = bufferFactory.createBuffers(collType, schemaVersion, isSubsetColl);
 
-  // TODO: Error handling of empty optional
+  if (!maybeBuffers) {
+    throw std::runtime_error("Could not create buffers for collection " + name + " of type " + collType +
+                             " and schema version " + std::to_string(schemaVersion));
+  }
   auto collBuffers = maybeBuffers.value_or(podio::CollectionReadBuffers{});
 
   const auto localEntry = catInfo.chain->LoadTree(catInfo.entry);
