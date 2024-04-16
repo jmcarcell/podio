@@ -28,6 +28,7 @@ inline std::string collMetadataParamName(const std::string& collName, const std:
 namespace Category {
   /// The event category
   constexpr const auto Event = "events";
+  constexpr const auto Events = Event;
   /// The run category
   constexpr const auto Run = "runs";
   /// The metadata category that is used to store a single Frame that holds data
