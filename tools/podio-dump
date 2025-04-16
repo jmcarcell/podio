@@ -11,27 +11,22 @@ if ! ls "${THIS_DIR}"/podio-dump-tool > /dev/null 2>&1; then
     exit 1
 fi
 
-ALL_ARGS=("$@")
 DUMP_MODEL=0
 
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        --dump-edm*)
-            DUMP_MODEL=1
-            break
-            ;;
-        *)
-            shift
-            ;;
-    esac
+for arg in "$@"; do
+    if [[ "$arg" == "--dump-edm"* ]]; then
+        DUMP_MODEL=1
+        break
+    fi
 done
+
 
 if [ ${DUMP_MODEL} = 1 ]; then
     if ! ls "${THIS_DIR}"/json-to-yaml > /dev/null 2>&1; then
         echo "Could not find the json-to-yaml executable (has it been instaled?)" >&2
         exit 1
     fi
-    "${THIS_DIR}"/podio-dump-tool "${ALL_ARGS[@]}" | "${THIS_DIR}"/json-to-yaml
+    "${THIS_DIR}"/podio-dump-tool "$@" | "${THIS_DIR}"/json-to-yaml
 else
-    "${THIS_DIR}"/podio-dump-tool "${ALL_ARGS[@]}"
+    "${THIS_DIR}"/podio-dump-tool "$@"
 fi
