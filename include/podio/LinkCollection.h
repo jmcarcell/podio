@@ -12,7 +12,7 @@
 /// buffer creation functionality with the CollectionBufferFactory.
 #define PODIO_DECLARE_LINK(FromT, ToT)                                                                                 \
   const static auto PODIO_PP_CONCAT(REGISTERED_LINK_, __COUNTER__) =                                                   \
-      podio::detail::registerLinkCollection<FromT, ToT>(podio::LinkCollection<FromT, ToT>::typeName);
+  podio::detail::registerLinkCollection<FromT, ToT>(podio::typeName<podio::LinkCollection<FromT, ToT>>);
 
 #if PODIO_ENABLE_SIO && __has_include("podio/detail/LinkSIOBlock.h")
   #include <podio/detail/LinkSIOBlock.h>

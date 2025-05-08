@@ -6,6 +6,9 @@
 #include "podio/utilities/MaybeSharedPtr.h"
 #include "podio/utilities/StaticConcatenate.h"
 #include "podio/utilities/TypeHelpers.h"
+
+#include "podio/detail/OrderKey.h"
+
 #include <string_view>
 
 #ifdef PODIO_JSON_OUTPUT
@@ -60,9 +63,9 @@ public:
   using value_type = podio::Link<FromT, ToT>;
   using collection_type = podio::LinkCollection<FromT, ToT>;
 
-  static constexpr std::string_view typeName =
-      utils::static_concatenate_v<detail::link_name_prefix, FromT::typeName, detail::link_name_infix, ToT::typeName,
-                                  detail::link_name_suffix>;
+  // static constexpr std::string_view typeName = "hello";
+  // utils::static_concatenate_v<detail::link_name_prefix, FromT::typeName, detail::link_name_infix, ToT::typeName,
+  //                             detail::link_name_suffix>;
   /// Constructor
   LinkT() : m_obj(new LinkObjT{}, podio::utils::MarkOwned) {
   }
@@ -372,6 +375,11 @@ void to_json(nlohmann::json& j, const podio::LinkT<FromT, ToT, false>& link) {
                            {"index", link.getTo().getObjectID().index}};
 }
 #endif
+
+template <typename FromT, typename ToT, bool Mutable>
+constexpr std::string_view typeName<podio::LinkT<FromT, ToT, Mutable>> =
+    podio::utils::static_concatenate_v<detail::link_name_prefix, podio::typeName<FromT>, detail::link_name_infix,
+                                       podio::typeName<ToT>, podio::detail::link_name_suffix>;
 
 } // namespace podio
 

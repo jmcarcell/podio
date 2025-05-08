@@ -8,6 +8,8 @@
 #include "podio/detail/LinkFwd.h"
 #include "podio/detail/LinkObj.h"
 
+#include "podio/detail/OrderKey.h"
+
 #include "podio/CollectionBase.h"
 #include "podio/CollectionBufferFactory.h"
 #include "podio/CollectionBuffers.h"
@@ -213,16 +215,16 @@ public:
     return m_storage.getCollectionBuffers(m_isSubsetColl);
   }
 
-  constexpr static std::string_view typeName =
-      podio::utils::static_concatenate_v<podio::detail::link_coll_name_prefix, FromT::typeName,
-                                         podio::detail::link_name_infix, ToT::typeName,
-                                         podio::detail::link_name_suffix>;
+  // constexpr static std::string_view typeName = "hello";
+  // podio::utils::static_concatenate_v<podio::detail::link_coll_name_prefix, FromT::typeName,
+  //                                    podio::detail::link_name_infix, ToT::typeName,
+  //                                    podio::detail::link_name_suffix>;
 
-  constexpr static std::string_view valueTypeName = value_type::typeName;
+  constexpr static std::string_view valueTypeName = podio::typeName<value_type>;
   constexpr static std::string_view dataTypeName = "podio::LinkData";
 
   const std::string_view getTypeName() const override {
-    return typeName;
+    return typeName<podio::LinkCollection<FromT, ToT>>;
   }
 
   const std::string_view getValueTypeName() const override {
@@ -336,7 +338,7 @@ namespace detail {
   template <typename FromT, typename ToT>
   podio::CollectionReadBuffers createLinkBuffers(bool subsetColl) {
     auto readBuffers = podio::CollectionReadBuffers{};
-    readBuffers.type = podio::LinkCollection<FromT, ToT>::typeName;
+    readBuffers.type = podio::typeName<podio::LinkCollection<FromT, ToT>>;
     readBuffers.schemaVersion = podio::LinkCollection<FromT, ToT>::schemaVersion;
     readBuffers.data = subsetColl ? nullptr : new LinkDataContainer();
 
@@ -402,6 +404,18 @@ void to_json(nlohmann::json& j, const podio::LinkCollection<FromT, ToT>& collect
   }
 }
 #endif
+
+
+template<typename FromT, typename ToT>
+constexpr std::string_view typeName<podio::LinkCollection<FromT, ToT>> =
+    podio::utils::static_concatenate_v<
+      podio::detail::link_coll_name_prefix,
+      podio::typeName<FromT>,
+      podio::detail::link_name_infix,
+      podio::typeName<ToT>,
+      podio::detail::link_name_suffix
+    >;
+
 
 } // namespace podio
 

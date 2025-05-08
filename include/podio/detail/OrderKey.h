@@ -1,6 +1,7 @@
 #ifndef PODIO_DETAIL_ORDERKEY_H
 #define PODIO_DETAIL_ORDERKEY_H
 #include <functional>
+#include <string_view>
 namespace podio::detail {
 /// Internal class allowing datatype objects to be placed in data structures like maps and sets by providing a way to
 /// compare them. The comparison is based on addresses of their internal data objects.
@@ -24,5 +25,10 @@ private:
   const void* m_orderKey;
 };
 } // namespace podio::detail
+
+namespace podio {
+template<typename T>
+constexpr std::string_view typeName;
+} // namespace podio
 
 #endif // PODIO_DETAIL_ORDERKEY_H

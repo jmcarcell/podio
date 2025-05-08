@@ -54,7 +54,7 @@ public:
 
 public:
 
-  static constexpr std::string_view typeName = "{{ class.full_type }}";
+  // static constexpr std::string_view typeName = "{{ class.full_type }}";
 
 {{ macros.member_getters(Members, use_get_syntax) }}
 {{ macros.single_relation_getters(OneToOneRelations, use_get_syntax) }}
@@ -77,5 +77,10 @@ std::ostream& operator<<(std::ostream& o, const {{ class.bare_type }}& value);
 {{ utils.namespace_close(class.namespace) }}
 
 {{ macros.std_hash(class) }}
+
+namespace podio {
+template<>
+inline constexpr std::string_view typeName<{{ class.full_type }}> = "{{ class.full_type }}";
+} // namespace podio
 
 #endif

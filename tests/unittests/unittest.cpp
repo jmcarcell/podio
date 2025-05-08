@@ -23,6 +23,7 @@
 #include "podio/ROOTReader.h"
 #include "podio/ROOTWriter.h"
 #include "podio/podioVersion.h"
+#include "podio/detail/LinkCollectionImpl.h"
 
 #ifndef PODIO_ENABLE_SIO
   #define PODIO_ENABLE_SIO 0
@@ -52,6 +53,7 @@
 #include "datamodel/ExampleWithOneRelationCollection.h"
 #include "datamodel/ExampleWithUserInitCollection.h"
 #include "datamodel/ExampleWithVectorMemberCollection.h"
+#include "datamodel/TypeWithEnergy.h"
 #include "datamodel/MutableExampleCluster.h"
 #include "datamodel/MutableExampleWithArray.h"
 #include "datamodel/MutableExampleWithComponent.h"
@@ -1557,7 +1559,7 @@ TEST_CASE("Clone empty relations", "[relations][basics]") {
 
 template <typename T>
 void addType(std::vector<std::string>& collectionTypes) {
-  collectionTypes.push_back(std::string(T::typeName));
+  collectionTypes.push_back(std::string(podio::typeName<T>));
 }
 
 template <typename... T>

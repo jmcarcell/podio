@@ -423,8 +423,8 @@ TEST_CASE("LinkCollection subset collection", "[links][subset-colls]") {
 // NOLINTEND(clang-analyzer-cplusplus.NewDeleteLeaks)
 
 TEST_CASE("LinkCollection basics", "[links]") {
-  STATIC_REQUIRE(TestL::typeName == "podio::Link<ExampleHit,ExampleCluster>");
-  STATIC_REQUIRE(TestLColl::typeName == "podio::LinkCollection<ExampleHit,ExampleCluster>");
+  STATIC_REQUIRE(podio::typeName<TestL> == "podio::Link<ExampleHit,ExampleCluster>");
+  STATIC_REQUIRE(podio::typeName<TestLColl> == "podio::LinkCollection<ExampleHit,ExampleCluster>");
 
   auto links = TestLColl{};
   auto link = links.create();
