@@ -3,3 +3,5 @@
 */*.jinja2 text diff=cpp
 */*/*.jinja2 text diff=cpp
 */*/*/*.jinja2 text diff=cpp
+
+*jinja2 cpp
