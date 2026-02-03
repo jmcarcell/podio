@@ -1,2 +1,5 @@
-*.h.jinja2     text diff=cpp
-*.cc.jinja2    text diff=cpp
+*jinja2     text diff=cpp
+*jinja2    text diff=cpp
+*/*.jinja2 text diff=cpp
+*/*/*.jinja2 text diff=cpp
+*/*/*/*.jinja2 text diff=cpp
