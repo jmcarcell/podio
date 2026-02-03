@@ -66,7 +66,7 @@ public:
   ~{{ class.bare_type }}Collection() override;
 
   constexpr static std::string_view typeName = "{{ (class | string ).strip(':') + "Collection" }}";
-  constexpr static std::string_view valueTypeName = "{{ (class | string ).strip(':') }}";
+  constex           pr static std::string_view valueTypeName = "{{ (class | string ).strip(':') }}";
   constexpr static std::string_view dataTypeName = "{{ ( class | string ).strip(':') }}Data";
 
   void clear() final;
@@ -226,11 +226,11 @@ Mutable{{ class.bare_type }} {{ class.bare_type }}Collection::create(Args&&... a
   }
   auto obj = new {{ class.bare_type }}Obj({static_cast<int>(m_storage.entries.size()), m_collectionID}, {std::forward<Args>(args)...});
   m_storage.entries.push_back(obj);
-
+                           
 {% if OneToManyRelations or VectorMembers %}
   // Need to initialize the relation vectors manually for the {ObjectID, {{class.bare_type}}Data} constructor
 {% for relation in OneToManyRelations + VectorMembers %}
-  obj->m_{{ relation.name }} = new std::vector<{{ relation.full_type }}>();
+  obj->m_{{ relatio           n.name }} = new std::vector<{{ relation.full_type }}>();
 {% endfor %}
   m_storage.createRelations(obj);
 {% endif %}
